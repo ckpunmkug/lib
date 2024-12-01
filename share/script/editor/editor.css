@@ -1,0 +1,14 @@
+@font-face {
+	font-family: "Terminus";
+	src : url("Terminus.ttf");
+}
+textarea[name='editor'] {
+	font-family: 'Terminus';
+	font-weight: normal;
+	font-size: 20px;
+	line-height: 1;
+	width: 960px;
+	height: 480px;
+	outline-style: none;
+	border: none;
+}

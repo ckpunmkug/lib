@@ -1,0 +1,86 @@
+* {
+	font-family: Sans-Serif;
+	font-size: 16px;
+}
+body {
+	background: #303030;
+	padding: 0px;
+	margin: 0px;
+	color: #ffffff;
+}
+iframe {
+	width: 100%;
+	border: none;
+}
+
+div[name='container'] {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	height: 100%;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+fieldset {
+	background: #565656;
+	border: solid 1px #1f1f1f;
+	border-radius: 4px;
+}
+legend {
+}
+hr {
+	border: none;
+}
+
+label {
+	color: #ffffff;
+	line-height: 32px;
+}
+
+input[type='text'],
+input[type='password']
+{
+	background: #3c3c3c;
+	color: #ffffff;
+	border: none;
+	border-radius: 4px;
+	width: 320px;
+	padding: 8px;
+	outline: none;
+}
+input[type='text']:focus,
+input[type='password']:focus
+{
+	outline: solid 2px #44F;
+}
+
+button {
+	padding: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	background: #727272;
+	color: #ffffff;
+	border: solid 2px #727272;
+	border-radius: 4px;
+}
+button:active {
+	border: solid 2px #565656;
+}
+button:disabled {
+	background: #565656;
+	color: #727272;
+	border: solid 2px #565656;
+}
+
+textarea {
+	resize: none;
+}
+td {
+	vertical-align: top;
+}
+

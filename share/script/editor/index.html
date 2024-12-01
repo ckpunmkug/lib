@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8' />
+		<title>Title</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href = 'editor.css' rel = 'stylesheet' />
+		<style>
+* {
+	background: #000;
+	color: #AAA;
+}
+		</style>
+	</head>
+	<body>
+		<textarea name="editor"
+		 spellcheck="false"
+		 style="resize: none;"
+		 autofocus
+		></textarea>
+	</body>
+	<script src='editor.js'></script>
+	<script>
+var editor = null;
+window.addEventListener("load", function(event) {
+	let textarea = document.querySelector("textarea[name='editor']");
+	editor = new editorObject(textarea);
+});
+	</script>
+</html>

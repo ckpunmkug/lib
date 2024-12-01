@@ -1,0 +1,26 @@
+@font-face {
+	font-family: 'Hack';
+	src: url('hack.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+}
+* {
+	background-color: #202124;
+	color: #e8eaed;
+	font-size: 12pt;
+}
+button {
+	background-color: #3c4043;
+	border: solid 1px #3c4043;
+	outline: none;
+	border-radius: 4px;
+	margin: 2pt;
+	padding: 6pt;
+}
+button:active {
+	background-color: #575e62;
+}
+button:focus {
+	border: solid 1px #e8eaed;
+}
+

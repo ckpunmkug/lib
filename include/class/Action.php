@@ -1,0 +1,31 @@
+<?php
+
+class Action
+{//{{{
+	var $styles = [
+		'/share/style/grey.css'
+	];
+	var style = 
+/////////////////////////////////////////////////////////////////////////////{{{
+<<<HEREDOC
+HEREDOC;
+/////////////////////////////////////////////////////////////////////////////}}}
+
+	var $scripts = [];
+	var $script = 
+/////////////////////////////////////////////////////////////////////////////{{{
+<<<HEREDOC
+HEREDOC;
+/////////////////////////////////////////////////////////////////////////////}}}
+
+	static function __construct()
+	{//{{{
+		header("X-Frame-Options: SAMEORIGIN");
+		HTML::$styles = array_merge(HTML::$styles, $this->styles);
+		HTML::$style .= $this->style;
+		HTML::$scripts .= array_merge(HTML::$scripts, $this->scripts);
+		HTML::$script .= $this->script;
+	}//}}}
+
+}//}}}
+
