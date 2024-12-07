@@ -1,7 +1,7 @@
 <?php 
 
 class HTML
-{
+{//{{{
 
 	static $head = "";
 	static $title = "";
@@ -23,8 +23,18 @@ class HTML
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0" />
+		<style>
+*
+	{
+		font-size: 16px;
+		background: #FFF;
+		color: #000;
+	}
+		</style>
 	<head>
-	<body><pre>{$buffer}</pre></body>
+	<body>
+		<pre>{$buffer}</pre>
+	</body>
 </html>
 
 HEREDOC;
@@ -87,13 +97,13 @@ HEREDOC;
 
 	static function generate_html()
 	{//{{{
-		$head = &self::$head;
-		$title = &self::$title;
+		$head = self::$head;
+		$title = self::$title;
 		$stylesheets = self::generate_stylesheets(self::$styles);
-		$style = &self::$style;
+		$style = self::$style;
 		$scripts = self::generate_scripts(self::$scripts);
-		$script = &self::$script;
-		$body = &self::$body;
+		$script = self::$script;
+		$body = self::$body;
 		$html = 
 ////////////////////////////////////////////////////////////////////////////////
 <<<HEREDOC
@@ -122,5 +132,5 @@ HEREDOC;
 		return($html);
 	}//}}}
 	
-}
+}//}}}
 

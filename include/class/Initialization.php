@@ -5,6 +5,10 @@ class Initialization
 
 	function __construct()
 	{//{{{//
+	
+		if(PHP_SAPI == 'cli-server') {
+			file_put_contents('php://stderr', "\n");
+		}
 		
 		$this->security();
 		
@@ -33,6 +37,7 @@ class Initialization
 	
 		define('DEBUG', true);
 		define('VERBOSE', true);
+		define('QUIET', false);
 		
 		if(@is_string($_SERVER["REQUEST_URI"]) !== true) {
 			trigger_error('Incorrect string $_SERVER["REQUEST_URI"]', E_USER_ERROR);
@@ -47,10 +52,16 @@ class Initialization
 	
 	function ini_set()
 	{//{{{//
-	
-		ini_set('error_reporting', E_ALL);
-		ini_set('display_errors', true);
-		ini_set('html_errors', false);
+		
+		if(defined('QUIET') && QUIET === true) {
+			ini_set('error_reporting', 0);
+			ini_set('display_errors', false);
+		}
+		else {
+			ini_set('error_reporting', E_ALL);
+			ini_set('display_errors', true);
+			ini_set('html_errors', false);
+		}
 		
 	}//}}}//
 

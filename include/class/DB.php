@@ -1,10 +1,10 @@
-<?php // Mysqli wrapper with advanced functionality
+<?php 
 
 class DB
 {//{{{
 	static $mysqli = NULL;
 	
-	static function open(string $host, string $user, string $password, string $database) // mysqli object
+	static function open(string $host, string $user, string $password, string $database)
 	{//{{{
 		$mysqli = &DB::$mysqli;
 
@@ -56,7 +56,7 @@ class DB
 			return(NULL);
 		} );
 		
-		return($mysqli);
+		return(true);
 	}//}}}
 	
 	function __construct()
@@ -68,7 +68,7 @@ class DB
 		return(NULL);
 	}//}}}
 
-	function query(string $sql) // true, array
+	function query(string $sql)
 	{//{{{
 		$mysqli = &DB::$mysqli;
 		
@@ -93,13 +93,13 @@ class DB
 		return($result);
 	}//}}}
 
-	function id() // int
+	function id()
 	{//{{{
 		$id = DB::$mysqli->insert_id;
 		return($id);
 	}//}}}
 
-	function queries(string $sql) // true
+	function queries(string $sql)
 	{//{{{
 		$mysqli = &DB::$mysqli;
 		
@@ -120,33 +120,33 @@ class DB
 		return(true);
 	}//}}}
 	
-	function escape(string $variable) // string
+	function escape(string $variable)
 	{//{{{
 		$string = DB::$mysqli->real_escape_string($variable);
 		return($string);
 	}//}}}
 
-	function name_escape(string $name) // string
+	function name(string $name)
 	{//{{{
 		$name = addcslashes($name, "`\\");
 		return($name);
 	}//}}}
 	
-	function int($variable) // string
+	function int($variable)
 	{//{{{
 		$number = intval($variable, 10);
 		$number = strval($number);
 		return($number);
 	}//}}}
 
-	function float($variable) // string
+	function float($variable)
 	{//{{{
 		$number = floatval($variable);
 		$number = strval($number);
 		return($number);
 	}//}}}
 
-	function encode($variable) // escaped string
+	function encode($variable)
 	{//{{{
 		$json = json_encode($variable, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 		if(!is_string($json)) {
