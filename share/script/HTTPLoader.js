@@ -1,20 +1,6 @@
-
 // Usage example
-/*
-function windowOnLoad($event) {
-	var $URL = "http://localhost/index.php";
-	if(!true) {
-		var $HTTPLoader = new HTTPLoader();
-		$HTTPLoader.load("GET", $URL, undefined,'user', 'password');
-	}
-	else {
-		var $HTTPLoader = new HTTPLoader(10, 1);
-		$HTTPLoader.complete = console.log.bind(console);
-		$HTTPLoader.load("GET", $URL, 'text');
-	}
-}
-window.addEventListener("load", windowOnLoad);
-*/
+/*{{{
+}}}*/
 
 function HTTPLoader(
 	$timeout = 30, // in seconds

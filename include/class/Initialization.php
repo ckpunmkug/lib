@@ -23,7 +23,9 @@ class Initialization
 	
 		header("Content-Security-Policy: frame-ancestors 'self';");
 
-		session_start();
+		session_start([
+			'cookie_samesite' => 'Strict',
+		]);
 		if(@is_string($_SESSION["csrf_token"]) != true) {
 			$string = session_id() . uniqid(); 
 			$_SESSION["csrf_token"] = md5($string);
