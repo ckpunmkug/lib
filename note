@@ -3,3 +3,17 @@ SQLite
 	CREATE TABLE
 }}}
 
+kali
+{{{
+	https://http.kali.org/pool/main/k/kali-archive-keyring/
+	
+	https://http.kali.org/pool/main/k/kali-archive-keyring/kali-archive-keyring_2024.1_all.deb
+	deb http://http.kali.org/kali kali-rolling main contrib non-free non-free-firmware
+
+#	[ /etc/fstab ]
+/dev /kali/dev devfs defaults,bind 0 1
+none /kali/dev/pts devpts defaults 0 1
+none /kali/proc proc defaults 0 1
+none /kali/sys sysfs defaults 0 1
+
+}}}
