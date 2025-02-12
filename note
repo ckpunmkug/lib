@@ -1,6 +1,19 @@
+git
+{{{
+	git config pull.rebase false - merge when pull
+	git pull
+}}}
+
 SQLite
 {{{
-	CREATE TABLE
+
+CREATE TABLE 'table_name' (
+	'id' INTEGER PRIMARY KEY
+	,'number' REAL
+	,'name' TEXT
+	,'file' BLOB
+);
+
 }}}
 
 kali
