@@ -1,3 +1,19 @@
+packages
+{{{
+
+daemonize - tool to run a command as a daemon
+filetea - Web-based file sharing system
+gitweb - fast, scalable, distributed revision control system (web interface)
+fonts-anonymous-pro - fixed width font designed for coders
+
+i2p - Invisible Internet Project (I2P) - anonymous network
+i2p-doc - Invisible Internet Project (I2P) - developer documentation
+
+mat2 - Metadata anonymisation toolkit v2
+apparmor-utils - utilities for controlling AppArmor
+
+}}}
+
 git
 {{{
 	git config pull.rebase false - merge when pull
@@ -30,3 +46,48 @@ none /kali/proc proc defaults 0 1
 none /kali/sys sysfs defaults 0 1
 
 }}}
+
+How to configure tor on VPS
+{{{
+
+## Check time offset
+ntpdate -q us.pool.ntp.org
+
+## Found tor packages
+apt-cache search tor anonymous
+
+nyx - terminal status monitor for tor
+tor - anonymizing overlay network for TCP
+obfs4proxy - pluggable transport proxy for Tor, implementing obfs4
+
+apt install tor nyx obfs4proxy
+The following NEW packages will be installed:
+  libevent-2.1-7 nyx obfs4proxy python3-stem tor tor-geoipdb torsocks
+
+## Create hash for controlling tor
+tor --hash-password MyPassword
+
+-[/var/lib/tor/.nyx/config]-
+password MyPassword
+-EOF-
+
+-[/etc/tor/torrc]-
+SocksPort 127.0.0.1:9050
+
+ControlPort 127.0.0.1:9051
+HashedControlPassword 16:872860B76453A77D60CA2BB8C1A7042072093276A3D701AD684053EC4C
+
+ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy
+UseBridges 1
+Bridge obfs4 45.79.1.70:35739 2869528F6D36C15A176D616B54665DF42BC16938 cert=K5BZWEaUjTmOfi5HOxK+ynF1TMJdHeyCJdtd/T5UfR+3PT6fjsj16+IxRzovpjO7bVrHaQ iat-mode=0
+-EOF-
+
+-{/etc/privoxy/config}-
+1456c1456
+< #        forward-socks5t   /               127.0.0.1:9050 .
+---
+>         forward-socks5t   /               127.0.0.1:9050 .
+-EOD-
+
+}}}
+
