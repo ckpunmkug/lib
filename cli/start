@@ -1,0 +1,25 @@
+#!/usr/bin/php
+<?php
+
+if(true) // Initialization
+{//{{{//
+	
+	define('DEBUG', true);
+	define('VERBOSE', true);
+	
+	set_include_path(__DIR__.'/../include');
+	
+	require_once('class/HTTP.php');
+	require_once('function/check_tor_connection.php');
+	
+}//}}}//
+
+HTTP::$user_agent = 'Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0';
+HTTP::$proxy = 'tcp://127.0.0.1:8118';
+HTTP::$follow_location = 0;
+HTTP::$max_redirects = 1;
+HTTP::$timeout = 30;
+
+$return = check_tor_connection();
+var_dump($return);
+
