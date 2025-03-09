@@ -13,13 +13,11 @@ mat2 - Metadata anonymisation toolkit v2
 apparmor-utils - utilities for controlling AppArmor
 
 }}}
-
 git
 {{{
 	git config pull.rebase false - merge when pull
 	git pull
 }}}
-
 SQLite
 {{{
 
@@ -31,7 +29,6 @@ CREATE TABLE 'table_name' (
 );
 
 }}}
-
 kali
 {{{
 	https://http.kali.org/pool/main/k/kali-archive-keyring/
@@ -46,7 +43,6 @@ none /kali/proc proc defaults 0 1
 none /kali/sys sysfs defaults 0 1
 
 }}}
-
 How to configure tor on VPS
 {{{
 
@@ -88,6 +84,160 @@ Bridge obfs4 45.79.1.70:35739 2869528F6D36C15A176D616B54665DF42BC16938 cert=K5BZ
 ---
 >         forward-socks5t   /               127.0.0.1:9050 .
 -EOD-
+
+}}}
+less
+{{{
+       SPACE or ^V or f or ^F
+              Scroll forward N lines, default one window (see option -z below).  If N is more  than  the  screen  size,  only  the  final
+              screenful is displayed.  Warning: some systems use ^V as a special literalization character.
+
+       b or ^B or ESC-v
+              Scroll backward N lines, default one window (see option -z below).  If N is more than  the  screen  size,  only  the  final
+              screenful is displayed.
+
+       ENTER or RETURN or ^N or e or ^E or j or ^J
+              Scroll forward N lines, default 1.  The entire N lines are displayed, even if N is more than the screen size.
+
+       y or ^Y or ^P or k or ^K
+              Scroll  backward  N  lines, default 1.  The entire N lines are displayed, even if N is more than the screen size.  Warning:
+              some systems use ^Y as a special job control character.
+
+       g or < or ESC-<
+              Go to line N in the file, default 1 (beginning of file).  (Warning: this may be slow if N is large.)
+
+       /pattern
+              Search  forward  in  the file for the N-th line containing the pattern.  N defaults to 1.  The pattern is a regular expres‐
+              sion, as recognized by the regular expression library supplied by your system.  The search starts at the  first  line  dis‐
+              played (but see the -a and -j options, which change this).
+       ?pattern
+              Search backward in the file for the N-th line containing the pattern.  The search starts at the last  line  displayed  (but
+              see the -a and -j options, which change this).
+              
+	      ^K     Highlight any text which matches the pattern on the current screen, but don't move to the first match (KEEP  current
+                     position).
+
+       ESC-u  Undo  search  highlighting.   Turn off highlighting of strings matching the current search pattern.  If highlighting is al‐
+              ready off because of a previous ESC-u command, turn highlighting back on.  Any search command will also  turn  highlighting
+              back on.  (Highlighting can also be disabled by toggling the -G option; in that case search commands do not turn highlight‐
+              ing back on.)
+		     
+       &pattern
+              Display  only  lines  which match the pattern; lines which do not match the pattern are not displayed.  If pattern is empty
+              (if you type & immediately followed by ENTER), any filtering is turned off, and all lines are displayed.   While  filtering
+              is  in  effect,  an ampersand is displayed at the beginning of the prompt, as a reminder that some lines in the file may be
+              hidden.  Multiple & commands may be entered, in which case only lines which match all of the patterns will be displayed.
+
+       n      Repeat previous search, for N-th line containing the last pattern.  If the previous search was modified by ^N,  the  search
+              is  made  for the N-th line NOT containing the pattern.  If the previous search was modified by ^E, the search continues in
+              the next (or previous) file if not satisfied in the current file.  If the previous search was modified by ^R, the search is
+              done without using regular expressions.  There is no effect if the previous search was modified by ^F or ^K.
+
+       N      Repeat previous search, but in the reverse direction.
+
+
+       :e [filename]
+              Examine a new file.  If the filename is missing, the "current" file (see the :n and :p commands below)  from  the  list  of
+              files  in the command line is re-examined.  A percent sign (%) in the filename is replaced by the name of the current file.
+              A pound sign (#) is replaced by the name of the previously examined file.  However, two consecutive percent signs are  sim‐
+              ply  replaced  with  a  single percent sign.  This allows you to enter a filename that contains a percent sign in the name.
+              Similarly, two consecutive pound signs are replaced with a single pound sign.  The filename is inserted  into  the  command
+              line  list  of  files  so that it can be seen by subsequent :n and :p commands.  If the filename consists of several files,
+              they are all inserted into the list of files and the first one is examined.  If the filename contains one or  more  spaces,
+              the entire filename should be enclosed in double quotes (also see the -" option).
+
+       :n     Examine the next file (from the list of files given in the command line).  If a number N is specified, the N-th  next  file
+              is examined.
+
+       :p     Examine the previous file in the command line list.  If a number N is specified, the N-th previous file is examined.
+
+       :x     Examine the first file in the command line list.  If a number N is specified, the N-th file in the list is examined.
+
+       :d     Remove the current file from the list of files.
+
+       = or ^G or :f
+              Prints some information about the file being viewed, including its name and the line number and byte offset of  the  bottom
+              line  being displayed.  If possible, it also prints the length of the file, the number of lines in the file and the percent
+              of the file above the last displayed line.
+
+       v      Invokes an editor to edit the current file being viewed.  The editor is taken from the environment variable VISUAL  if  de‐
+              fined,  or EDITOR if VISUAL is not defined, or defaults to "vi" if neither VISUAL nor EDITOR is defined.  See also the dis‐
+              cussion of LESSEDIT under the section on PROMPTS below.
+
+       -jn or --jump-target=n
+              Specifies  a  line on the screen where the "target" line is to be positioned.  The target line is the line specified by any
+              command to search for a pattern, jump to a line number, jump to a file percentage or jump to a tag.  The screen line may be
+              specified  by a number: the top line on the screen is 1, the next is 2, and so on.  The number may be negative to specify a
+              line relative to the bottom of the screen: the bottom line on the screen is -1, the second to the bottom is -2, and so  on.
+              Alternately,  the screen line may be specified as a fraction of the height of the screen, starting with a decimal point: .5
+              is in the middle of the screen, .3 is three tenths down from the first line, and so on.  If the  line  is  specified  as  a
+              fraction,  the actual line number is recalculated if the terminal window is resized, so that the target line remains at the
+              specified fraction of the screen height.  If any form of the -j option is used, repeated forward searches (invoked with "n"
+              or  "N")  begin at the line immediately after the target line, and repeated backward searches begin at the target line, un‐
+              less changed by -a or -A.  For example, if "-j4" is used, the target line is the fourth line  on  the  screen,  so  forward
+              searches  begin  at  the fifth line on the screen.  However nonrepeated searches (invoked with "/" or "?")  always begin at
+              the start or end of the current screen respectively.
+
+       -n or --line-numbers
+              Suppresses line numbers.  The default (to use line numbers) may cause less to run more slowly  in  some  cases,  especially
+              with  a  very  large  input file.  Suppressing line numbers with the -n option will avoid this problem.  Using line numbers
+              means: the line number will be displayed in the verbose prompt and in the = command, and the v command will pass  the  cur‐
+              rent line number to the editor (see also the discussion of LESSEDIT in PROMPTS below).
+
+       -N or --LINE-NUMBERS
+              Causes a line number to be displayed at the beginning of each line in the display.
+
+       --line-num-width
+              Sets the minimum width of the line number field when the -N option is in effect.  The default is 7 characters.
+
+       The -P option allows you to tailor the prompt to your preference.  The string given to the -P option replaces the specified prompt
+       string.  Certain characters in the string are interpreted specially.  The prompt mechanism is rather complicated to provide flexi‐
+       bility, but the ordinary user need not understand the details of constructing personalized prompt strings.
+
+       %f     Replaced by the name of the current input file.
+
+       EDITOR The name of the editor (used for the v command).
+
+
+
+
+}}}
+screen
+{{{
+
+       -S sessionname
+            When  creating  a new session, this option can be used to specify a meaningful name for the session. This name identifies the
+            session for screen -list and screen -r actions. It substitutes the default [tty.host] suffix. This name should not be  longer
+            then 80 symbols.
+
+       -t name
+            sets the title (a.k.a.) for the default shell or specified program.  See also the shelltitle .screenrc command.
+
+       -X   Send  the  specified command to a running screen session. You may use the -S option to specify the screen session if you have
+            several screen sessions running. You can use the -d or -r option to tell screen to look only for attached or detached  screen
+            sessions. Note that this command doesn't work if the session is password protected.
+
+       -s program
+            sets the default shell to the program specified, instead of the value in the environment variable $SHELL (or /bin/sh  if  not
+            defined).  This can also be defined through the shell .screenrc command.  See also there.
+
+       C-a '              (select)          Prompt for a window name or number
+                                            to switch to.
+ 
+       C-a A              (title)           Allow the user to enter a name for
+                                            the current window.
+
+       C-a c,             (screen)          Create a new window with  a  shell
+       C-a C-c                              and switch to that window.
+ 
+       C-a >              (writebuf)        Write paste buffer to a file.
+       
+       C-a <              (readbuf)         Reads  the  screen-exchange   file
+                                            into the paste buffer.
+       
+       C-a =              (removebuf)       Removes the file used by C-a < and
+                                            C-a >.
+  
 
 }}}
 
