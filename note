@@ -12,6 +12,9 @@ i2p-doc - Invisible Internet Project (I2P) - developer documentation
 mat2 - Metadata anonymisation toolkit v2
 apparmor-utils - utilities for controlling AppArmor
 
+cmseek - CMS Detection and Exploitation suite
+
+
 }}}
 git
 {{{
@@ -103,6 +106,9 @@ less
               Scroll  backward  N  lines, default 1.  The entire N lines are displayed, even if N is more than the screen size.  Warning:
               some systems use ^Y as a special job control character.
 
+       +cmd   Causes the specified cmd to be executed each time a new file is examined.  For example, +G causes less to initially display
+              each file starting at the end rather than the beginning.
+       
        g or < or ESC-<
               Go to line N in the file, default 1 (beginning of file).  (Warning: this may be slow if N is large.)
 
@@ -197,9 +203,6 @@ less
        %f     Replaced by the name of the current input file.
 
        EDITOR The name of the editor (used for the v command).
-
-
-
 
 }}}
 screen

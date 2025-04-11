@@ -1,7 +1,7 @@
 <?php 
 
 class HTML
-{//{{{
+{
 
 	static $head = "";
 	static $title = "";
@@ -23,14 +23,6 @@ class HTML
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0" />
-		<style>
-*
-	{
-		font-size: 16px;
-		background: #FFF;
-		color: #000;
-	}
-		</style>
 	<head>
 	<body>
 		<pre>{$buffer}</pre>
@@ -132,5 +124,5 @@ HEREDOC;
 		return($html);
 	}//}}}
 	
-}//}}}
+}
 
