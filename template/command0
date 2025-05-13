@@ -1,0 +1,74 @@
+#!/usr/bin/php
+<?php
+
+cli_set_process_title('command0');
+pcntl_async_signals(true);
+
+// Signals
+/*{{{
+
+SIGABRT  6 Abort signal from abort(3)
+SIGALRM 14 Timer signal from alarm(2)
+SIGCHLD 17 Child stopped or terminated
+SIGCONT 18 Continue if stopped
+SIGHUP   1 Hangup detected on controlling terminal or death of controlling process
+SIGINT   2 Interrupt from keyboard
+SIGKILL  9 Kill signal
+SIGQUIT  3 Quit from keyboard
+SIGSTOP 19 Stop process
+SIGTERM 15 Termination signal
+SIGUSR1 10 User-defined signal 1
+SIGUSR2 12 User-defined signal 2
+
+}}}*/
+
+function hangup_signal_handler()
+{//{{{//
+	echo("Hangup detected on controlling terminal or death of controlling process\n");
+}//}}}//
+pcntl_signal(SIGHUP, "hangup_signal_handler");
+
+function continue_signal_handler()
+{//{{{//
+	echo("Continue if stopped\n");
+}//}}}//
+pcntl_signal(SIGCONT, "continue_signal_handler");
+
+function user1_signal_handler()
+{//{{{//
+	echo("User-defined signal 1\n");
+}//}}}//
+pcntl_signal(SIGUSR1, "user1_signal_handler");
+
+function user2_signal_handler()
+{//{{{//
+	echo("User-defined signal 2\n");
+}//}}}//
+pcntl_signal(SIGUSR2, "user2_signal_handler");
+
+function termination_signal_handler()
+{//{{{//
+	echo("Termination signal\n");
+	exit(0);
+}//}}}//
+pcntl_signal(SIGTERM, "termination_signal_handler");
+
+function quit_signal_handler()
+{//{{{//
+	echo("Quit from keyboard\n");
+	exit(0);
+}//}}}//
+pcntl_signal(SIGQUIT, "quit_signal_handler");
+
+function interrupt_signal_handler()
+{//{{{//
+	echo("Interrupt from keyboard\n");
+	exit(255);
+}//}}}//
+pcntl_signal(SIGINT, "interrupt_signal_handler");
+
+while(true) {
+	echo(time()."\n");
+	system('sleep 3');
+}
+
