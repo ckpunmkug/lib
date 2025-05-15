@@ -1,7 +1,7 @@
 <?php 
 
 class Initialization
-{//{{{//
+{
 
 	function __construct()
 	{//{{{//
@@ -67,5 +67,5 @@ class Initialization
 		
 	}//}}}//
 
-}//}}}//
+}
 

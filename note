@@ -32,7 +32,7 @@ CREATE TABLE 'table_name' (
 );
 
 }}}
-kali
+kali and ubuntu 22.04
 {{{
 	https://http.kali.org/pool/main/k/kali-archive-keyring/
 	
@@ -44,6 +44,12 @@ kali
 none /kali/dev/pts devpts defaults 0 1
 none /kali/proc proc defaults 0 1
 none /kali/sys sysfs defaults 0 1
+
+#	[ /ubuntu/etc/apt/sources.list ]
+deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
 
 }}}
 How to configure tor on VPS

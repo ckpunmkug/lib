@@ -38,7 +38,7 @@ nmap <C-P> :set nopaste<CR>
 
 imap <CR> <CR>x<BS>
 imap {<CR> {<CR>}<UP><END><CR><TAB>
-imap {/<CR> {//{{{//<CR>}//}}}//<CR><UP><UP><END><CR><TAB>
+imap {/<CR> {//{{{//<CR>}//}}}//<UP><END><CR><TAB>
 
 abbreviate _W_ //if (defined('DEBUG') && DEBUG) var_dump(['' => ]);<CR>trigger_error("", E_USER_WARNING);<CR>return(false);
 abbreviate _E_ //if (defined('DEBUG') && DEBUG) var_dump(['' => ]);<CR>trigger_error("", E_USER_ERROR);<CR>exit(255);
@@ -46,6 +46,7 @@ abbreviate _D_ var_dump(__FILE__.":".__LINE__, [<CR>	'' => <CR>]); //die;
 abbreviate _V_ if(defined('VERBOSE') && VERBOSE) {<CR>	user_error("");}
 abbreviate .w. trigger_error("", E_USER_WARNING);<CR>return(false);
 abbreviate .e. trigger_error("", E_USER_ERROR);
+abbreviate ,w, console.warn("");<CR>return(false);
 abbreviate _H_ ///////////////////////////////////////////////////////////////{{{//<CR><<<HEREDOC<CR>HEREDOC;<CR>///////////////////////////////////////////////////////////////}}}//
 
 " color column tuning

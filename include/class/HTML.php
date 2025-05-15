@@ -110,11 +110,11 @@ HEREDOC;
 		<style>
 {$style}
 		</style>
-{$scripts}
-		<script>
-{$script}
-		</script>
 	</head>
+{$scripts}
+	<script>
+{$script}
+	</script>
 	<body>
 {$body}
 	</body>

@@ -1,0 +1,13 @@
+[Unit]
+Description=MicroSocks SOCKS5 Server
+After=network.target
+
+[Service]
+Type=simple
+
+User=proxy
+Group=proxy
+ExecStart=/usr/bin/microsocks -i 192.168.2.1
+
+[Install]
+WantedBy=multi-user.target

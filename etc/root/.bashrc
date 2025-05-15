@@ -51,5 +51,6 @@ alias netns='/usr/bin/ip netns exec isolator /usr/bin/bash'
 alias pkg-list="dpkg-query  -f='\${binary:Package} - \${binary:Synopsis}\n' -W"
 alias su-bash="su -P -s /bin/sh -c bash -l"
 
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export PS1="\n\u \h \w \n> "
 
