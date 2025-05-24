@@ -48,6 +48,12 @@ abbreviate .w. trigger_error("", E_USER_WARNING);<CR>return(false);
 abbreviate .e. trigger_error("", E_USER_ERROR);
 abbreviate ,w, console.warn("");<CR>return(false);
 abbreviate _H_ ///////////////////////////////////////////////////////////////{{{//<CR><<<HEREDOC<CR>HEREDOC;<CR>///////////////////////////////////////////////////////////////}}}//
+abbreviate _CB_ if(!eval(C::$B.='')) return(false);
+abbreviate _CI_ if(!eval(C::$I.='')) return(false);
+abbreviate _CF_ if(!eval(C::$F.='')) return(false);
+abbreviate _CS_ if(!eval(C::$S.='')) return(false);
+abbreviate _CA_ if(!eval(C::$A.='')) return(false);
+
 
 " color column tuning
 nmap \| :set colorcolumn=81<CR>
