@@ -30,11 +30,9 @@
 	Args::apply();
 }}} */
 
-class Args 
-{
+class Args {//{{{
 	static $description = "";
 	static $config = [];
-	
 	static function help()
 	{//{{{
 		$text = "";
@@ -51,7 +49,6 @@ class Args
 		echo $text."\n";
 		return NULL;
 	}//}}}
-	
 	static function apply()
 	{//{{{
 		self::add();
@@ -79,7 +76,6 @@ class Args
 			}
 		}, $argv);
 	}//}}}
-	
 	static function add(array $config = [])
 	{//{{{
 		if (!empty($config)) {
@@ -116,5 +112,5 @@ class Args
 			}, false
 		]);
 	}//}}}
-}
+}//}}}
 

@@ -1,21 +1,233 @@
 #!/usr/bin/php
-<?php detine('VENDOR', 'ckpunmkug');
+<?php
 
-define('PROJECT_NAME', 'framework');
-define('PROJECT_DIR', realpath(__DIR__.'/..'));
+if(true) // define PROJECT_DIR, HOME_DIR
+{//{{{//
 
-set_include_path(PROJECT_DIR.'/include');
+	$realpath = realpath(__DIR__.'/..');
+	if(!is_string($realpath)) {
+		trigger_error("Unable to get real path to project root folder", E_USER_ERROR);
+		exit(255);
+	}
+	define('PROJECT_DIR', $realpath);
+	
+	$env = getenv('HOME');
+	if(!is_string($env)) {
+		trigger_error("Can't get 'HOME' environment", E_USER_ERROR);
+		exit(255);
+	}
+	define('HOME_DIR', $env);
+	
+}//}}}//
 
-require_once('class/Args.php');
-require_once('block/Args.php');
+if(true) // define VENDOR_NAME, PROJECT_NAME
+{//{{{//
+	
+	$basename = basename(PROJECT_DIR);
+	if(!is_string($basename)) {
+		trigger_error("Can't get 'basename' from 'PROJECT_DIR'", E_USER_ERROR);
+		exit(255);
+	}
+	
+	define('VENDOR_NAME', 'ckpunmkug');
+	define('PROJECT_NAME', $basename);
+	
+}//}}}//
 
-require_once('class/Main.php');
-require_once('function/main.php');
+if(true) // require
+{//{{{//
+	
+	set_include_path(PROJECT_DIR.'/include');
+	require_once('class/Check.php');
+	require_once('class/ArgV.php');
+	
+	require_once('component/example.php');
+	
+}//}}}//
 
-$return = main($argv);
-if($return !== true) {
-	trigger_error("'main' call failed", E_USER_ERROR);
-	exit(255);
-}
+if(true) // ArgV
+{//{{{//
+	
+	$_ = [
+		"config_file" => HOME_DIR.'/.config/'.VENDOR_NAME.'/'.PROJECT_NAME.'/config.ini',
+		"database_file" => HOME_DIR.'/.cache/'.VENDOR_NAME.'/'.PROJECT_NAME.'/database.sqlite',
+		"shared_folder" => HOME_DIR.'/.share/'.VENDOR_NAME.'/'.PROJECT_NAME,
+	];
+	
+	ArgV::$description = 
+///////////////////////////////////////////////////////////////{{{//
+<<<HEREDOC
+
+	Default paths used:
+		configuration file - {$_["config_file"]}
+		database file - {$_["database_file"]}
+		shared folder - {$_["shared_folder"]}
+	  
+HEREDOC;
+///////////////////////////////////////////////////////////////}}}//
+
+	if(true) ArgV::add([
+		"-n", "--no-config", NULL, "Do not use config ini file",
+		function () {
+			define("NO_CONFIG", true);
+		}, false
+	]);
+
+	if(true) ArgV::add([
+		NULL, "--config", "<path>", "Path to config ini file",
+		function ($string) {
+			define("CONFIG_FILE", $string);
+		}, false
+	]);
+	
+	if(true) ArgV::add([
+		NULL, "--database", "<path>", "Path to database SQLite3 file",
+		function ($string) {
+			define("DATABASE_FILE", $string);
+		}, false
+	]);
+	
+	if(true) ArgV::add([
+		NULL, "--share", "<path>", "Path to shared folder",
+		function ($string) {
+			define("SHARE_DIR", $string);
+		}, false
+	]);
+	
+	if(true) ArgV::add([
+		"-C", "--component", "<name>", NULL,
+		function ($string) {
+			define("COMPONENT", $string);
+		}, false
+	]);
+	
+	if(true) ArgV::add([
+		"-A", "--action", "<name>", NULL,
+		function ($string) {
+			define("ACTION", $string);
+		}, false
+	]);
+	
+	if(true) ArgV::add([
+		"-P", "--parameter", "<string>", NULL,
+		function ($string) {
+			define("PARAMETER", $string);
+		}, false
+	]);
+	
+	if(true) ArgV::add([
+		"-I", "--input", "<path>", "Path to input file",
+		function ($string) {
+			define("INPUT_FILE", $string);
+		}, false
+	]);
+	
+	if(true) ArgV::add([
+		"-O", "--output", "<path>", "Path to output file",
+		function ($string) {
+			define("OUTPUT_FILE", $string);
+		}, false
+	]);
+
+
+	ArgV::apply();
+	
+}//}}}//
+
+if(true && !defined('NO_CONFIG')) // load config
+{//{{{//
+	
+	if(!defined('CONFIG_FILE')) {
+		define('CONFIG_FILE', HOME_DIR.'/.config/'.VENDOR_NAME.'/'.PROJECT_NAME.'/config.ini');
+	}
+
+	$ini_contents = @file_get_contents(CONFIG_FILE);
+	if(!is_string($ini_contents)) {
+		if (defined('DEBUG') && DEBUG) var_dump(['config ini file' => CONFIG_FILE]);
+		trigger_error("Can't get contents of config ini file", E_USER_ERROR);
+		exit(255);
+	}
+	
+	$config = @parse_ini_string($ini_contents, true, INI_SCANNER_TYPED);
+	if(!is_array($config)) {
+		if (defined('DEBUG') && DEBUG) var_dump(['ini contents' => $ini_contents]);
+		trigger_error("Can't parse ini contents of config file", E_USER_ERROR);
+		exit(255);
+	}
+	
+	define('CONFIG', $config);
+	
+}//}}}//
+
+$COMPONENT = ['example', 'server'];
+
+if(true) // route COMPONENT
+{//{{{//
+	
+	if(!defined('COMPONENT')) {
+		define('COMPONENT', 'example');
+	}
+	$component = COMPONENT;
+	
+	if(!defined('CONFIG')) {
+		define('CONFIG', ["{$component}" => []]);
+	}
+	if(!key_exists($component, CONFIG)) {
+		if (defined('DEBUG') && DEBUG) var_dump([
+			"section name" => $component,
+			"config ini file" => CONFIG_FILE,
+		]);
+		trigger_error("Section for component not exists in config ini file", E_USER_ERROR);
+		exit(255);
+	}
+	
+	if(!defined('ACTION')) {
+		define('ACTION', 'test');
+	}
+	
+	$data = '';	
+	if(defined('PARAMETER')) {
+		$data = PARAMETER;
+	}
+	if(defined('INPUT_FILE')) {
+		$data = file_get_contents(INPUT_FILE);
+		if(!is_string($data)) {
+			if (defined('DEBUG') && DEBUG) var_dump(['input file' => INPUT_FILE]);
+			trigger_error("Can't get contents from input file", E_USER_ERROR);
+			exit(255);
+		}
+	}
+	
+	if(in_array($component, $COMPONENT)) {
+		$out = '';
+		$return = $component::main(CONFIG[$component], ACTION, $data, $out);
+		if($return !== true) {
+			trigger_error("Main call of '{$component}' component returned an error", E_USER_ERROR);
+			exit(255);
+		}
+	}
+	else {
+		if (defined('DEBUG') && DEBUG) var_dump(['unsupported component' => COMPONENT]);
+		trigger_error("Passed unsupported component", E_USER_ERROR);
+		exit(255);
+	}
+	
+	if(defined('OUTPUT_FILE')) {
+		if(!is_string($out)) {
+			if (defined('DEBUG') && DEBUG) var_dump(['out variable' => $out]);
+			trigger_error("Out variable is not string", E_USER_ERROR);
+			exit(255);
+		}
+	
+		$return = file_put_contents(OUTPUT_FILE, $out);
+		if(!is_int($return)) {
+			if (defined('DEBUG') && DEBUG) var_dump(['output file' => OUTPUT_FILE]);
+			trigger_error("Can't put contents to output file", E_USER_ERROR);
+			exit(255);
+		}
+	}
+	
+}//}}}//
+
 exit(0);
 

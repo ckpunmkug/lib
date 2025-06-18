@@ -7,9 +7,9 @@ highlight Folded ctermfg=DarkGrey ctermbg=Black
 " zc zo close open fold zM zR close open All folds
 set foldmethod=marker
 
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
+set tabstop=8
+set softtabstop=8
+set shiftwidth=8
 set nowrap
 set noswapfile
 set showtabline=2
@@ -43,16 +43,17 @@ imap {/<CR> {//{{{//<CR>}//}}}//<UP><END><CR><TAB>
 abbreviate _W_ //if (defined('DEBUG') && DEBUG) var_dump(['' => ]);<CR>trigger_error("", E_USER_WARNING);<CR>return(false);
 abbreviate _E_ //if (defined('DEBUG') && DEBUG) var_dump(['' => ]);<CR>trigger_error("", E_USER_ERROR);<CR>exit(255);
 abbreviate _D_ var_dump(__FILE__.":".__LINE__, [<CR>	'' => <CR>]); //die;
-abbreviate _V_ if(defined('VERBOSE') && VERBOSE) {<CR>	user_error("");}
+abbreviate _V_ if(defined('VERBOSE') && VERBOSE) <CR>	file_put_contents('php://stderr', "");
 abbreviate .w. trigger_error("", E_USER_WARNING);<CR>return(false);
 abbreviate .e. trigger_error("", E_USER_ERROR);
+abbreviate .v. if(defined('VERBOSE') && VERBOSE) <CR>	file_put_contents('php://stderr', sprintf("\r(%08d) [%d] ", ($count -= 1), $key));
 abbreviate ,w, console.warn("");<CR>return(false);
 abbreviate _H_ ///////////////////////////////////////////////////////////////{{{//<CR><<<HEREDOC<CR>HEREDOC;<CR>///////////////////////////////////////////////////////////////}}}//
-abbreviate _CB_ if(!eval(C::$B.='')) return(false);
-abbreviate _CI_ if(!eval(C::$I.='')) return(false);
-abbreviate _CF_ if(!eval(C::$F.='')) return(false);
-abbreviate _CS_ if(!eval(C::$S.='')) return(false);
-abbreviate _CA_ if(!eval(C::$A.='')) return(false);
+abbreviate _CB_ if(!eval(Check::$bool.='')) return(false);
+abbreviate _CI_ if(!eval(Check::$int.='')) return(false);
+abbreviate _CF_ if(!eval(Check::$float.='')) return(false);
+abbreviate _CS_ if(!eval(Check::$string.='')) return(false);
+abbreviate _CA_ if(!eval(Check::$array.='')) return(false);
 
 
 " color column tuning
