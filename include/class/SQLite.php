@@ -218,7 +218,7 @@ HEREDOC;
 	static function check_table_name(string $table_name) // (bool) true
 	{//{{{//
 		
-		$pattern = '/^[_a-zA-Z0-9\/]+$/';
+		$pattern = '/^[_a-zA-Z0-9\/\-\.]+$/';
 		$return = preg_match($pattern, $table_name);
 		if($return !== 1) {
 			if (defined('DEBUG') && DEBUG) var_dump(['$table_name' => $table_name]);
@@ -243,7 +243,8 @@ HEREDOC;
 		
 	}//}}}//
 	
-	static function create_table(string $table_name, array $columns_describe) // (bool) true
+	// DROP TABLE IF EXISTS
+	static function drop_table(string $table_name) // (bool) true
 	{//{{{//
 	 	
 		$return = self::check_table_name($table_name);
@@ -261,6 +262,20 @@ HEREDOC;
 		$return = self::query($sql);
 		if(!$return) {
 			trigger_error("Can't drop table", E_USER_WARNING);
+			return(false);
+		}
+		
+		return(true);
+		
+	}//}}}//
+	
+	// CREATE TABLE IF NOT EXISTS
+	static function create_table(string $table_name, array $columns_describe) // (bool) true
+	{//{{{//
+	 	
+		$return = self::check_table_name($table_name);
+		if(!$return) {
+			trigger_error("Incorrect table name", E_USER_WARNING);
 			return(false);
 		}
 		

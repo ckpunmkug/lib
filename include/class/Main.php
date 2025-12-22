@@ -2,132 +2,90 @@
 
 class Main
 {
-
-	function __construct()
+	static function start()
 	{//{{{
+		
 		$request_method = @strval($_SERVER["REQUEST_METHOD"]);
 		switch($request_method) {
 			case('GET'):
-				$return = $this->handle_get_request();
+				$return = self::handle_get_request();
 				if($return !== true) {
+					http_response_code(500);
 					trigger_error("Handle get request failed", E_USER_ERROR);
 					exit(255);
 				}
 				exit(0);
 			case('POST'):
-				$return = $this->handle_post_request();
+				$return = self::handle_post_request();
 				if($return !== true) {
+					http_response_code(500);
 					trigger_error("Handle post request failed", E_USER_ERROR);
 					exit(255);
 				}
 				exit(0);
 			default:
+				http_response_code(500);
 				trigger_error("Unsupported http request method", E_USER_ERROR);
 				exit(255);
 		}
-	}//}}}
-	
-	function handle_get_request()
-	{//{{{
-		$component = '';
-		if(@is_string($_GET["component"])) {
-			$component = $_GET["component"];
-		}
-		switch($component) {
-			case(''):
-				$return = $this->index();
-				if($return !== true) {
-					trigger_error("Can't create 'index' page", E_USER_WARNING);
-					return(false);
-				}
-				return(true);
-			/*
-			case('test'):
-				require_once('component/test.php');
-				$return = test::page();
-				if($return !== true) {
-					trigger_error("The 'test' component can't create page", E_USER_WARNING);
-					return(false);
-				}
-				return(true);
-			*/
-			default:
-				trigger_error("Unsupported 'component'", E_USER_WARNING);
-				return(false);
-		}
-	}//}}}
-	
-	function handle_post_request()
-	{//{{{
-		$component = '';
-		if(@is_string($_POST["component"])) {
-			$component = $_POST["component"];
-		}
-		switch($component) {
-			case(''):
-				$return = $this->ajax();
-				if($return !== true) {
-					trigger_error("Can't create 'ajax' page", E_USER_WARNING);
-					return(false);
-				}
-				return(true);
-			/*
-			case('test'):
-				require_once('component/test.php');
-				$return = test::action();
-				if($return !== true) {
-					trigger_error("The 'test' component can't perform action", E_USER_WARNING);
-					return(false);
-				}
-				return(true);
-			*/
-			default:
-				trigger_error("Unsupported 'component'", E_USER_WARNING);
-				return(false);
-		}
-	}//}}}
-	
-	function index()
-	{//{{{	
-		$url_path = URL_PATH;
-		$csrf_token = CSRF_TOKEN;
 		
-		HTML::$body .= 
+	}//}}}
+	
+	static function handle_get_request()
+	{//{{{
+		
+		require('class/HTML.php');
+		require('function/form_layout.php');
+		$HTML = new HTML();
+		
+		return(true);
+		
+		label_404:
+		http_response_code(404);
+		HTML::$title = '404 Not Found';
+		HTML::$body = 
 ////////////////////////////////////////////////////////////////////////////////
 <<<HEREDOC
-<form src="{$url_path}" method="post">
-	<input name="csrf_token" value="{$csrf_token}" type="hidden" />
-	<label>String
-		<input name="string" value="" type="text" />
-	</label>
-	<button type="submit">Send</button>
-</form>
+<h1>Not Found</h1>
+<p>The requested URL was not found on this server.</p>
 
 HEREDOC;
 ////////////////////////////////////////////////////////////////////////////////
-
 		return(true);
+	
 	}//}}}
-
-	function ajax()
+	
+	static function handle_post_request()
 	{//{{{
+	
 		$csrf_token = @strval($_POST["csrf_token"]);
-		if(strcmp($csrf_token, CSRF_TOKEN) !== 0) {
-			trigger_error("Compare csrf_tokens failed", E_USER_ERROR);
-			exit(255);
-		}
-		
-		$string = @strval($_POST["string"]);
-		HTML::$body .=
+		if($csrf_token !== CSRF_TOKEN) goto label_403;
+	
+		return(true);
+	
+		label_403:
+		http_response_code(403);
+		$html = 
 ////////////////////////////////////////////////////////////////////////////////
 <<<HEREDOC
-<h1>{$string}</h1>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0" />
+		<title>403 Access forbidden!</title>
+	</head>
+	<body>
+<h1>Access forbidden!</h1>
+<p>You don't have permission to access the requested object.</p>
 
+	</body>
+</html>
 HEREDOC;
 ////////////////////////////////////////////////////////////////////////////////
-		
+		echo($html);
 		return(true);
+		
 	}//}}}
-
 }
 
