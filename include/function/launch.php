@@ -1,7 +1,6 @@
-#!/usr/bin/php
 <?php
 
-function launch(string $command, int $timeout) // array
+function launch(string $command, int $timeout = 30) // array
 {//{{{//
 	
 	$timeout *= 1000000;
@@ -25,6 +24,11 @@ function launch(string $command, int $timeout) // array
 		return(false);
 	}
 	
+	$stdout = '';
+	$stderr = '';
+	stream_set_blocking($PIPE[1], false);
+	stream_set_blocking($PIPE[2], false);
+	
 	while(true) {//
 		$proc_status = proc_get_status($proc);
 		if(!is_array($proc_status)) {
@@ -34,9 +38,13 @@ function launch(string $command, int $timeout) // array
 		}
 		
 		if($proc_status["running"] == false) break;
+		
+		$stdout .= stream_get_contents($PIPE[1]);
+		$stderr .= stream_get_contents($PIPE[2]);
 	
 		usleep(100000);
 		$timeout -= 100000;
+		
 		if($timeout <= 0) {
 			proc_terminate($proc, 9);
 			
@@ -63,7 +71,7 @@ function launch(string $command, int $timeout) // array
 		trigger_error("Can't get command stdout contents", E_USER_WARNING);
 		return(false);
 	}
-	$result["stdout"] = $contents;
+	$result["stdout"] = $stdout.$contents;
 	fclose($PIPE[1]);
 	
 	$contents = stream_get_contents($PIPE[2]);
@@ -72,7 +80,7 @@ function launch(string $command, int $timeout) // array
 		trigger_error("Can't get command stderr contents", E_USER_WARNING);
 		return(false);
 	}
-	$result["stderr"] = $contents;
+	$result["stderr"] = $stderr.$contents;
 	fclose($PIPE[2]);
 	
 	proc_close($proc);
