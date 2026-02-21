@@ -1,0 +1,10 @@
+#output_buffer {
+	all: unset;
+	display: block;
+	width: 100%;
+	background: #300;
+	color: #CCC;
+	border-bottom: 1px solid #C00;
+	padding-bottom: 20px;
+	margin-bottom: 10px;
+}
