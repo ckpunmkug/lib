@@ -52,6 +52,12 @@ HEREDOC;
 	static function echo()
 	{//{{{
 	
+		$ob = ob_get_clean();
+		$ob = htmlentities($ob);
+		if(strlen($ob) > 0) {
+			self::$body = "<pre>{$ob}</pre>\n".self::$body;
+		}
+	
 		$head = self::$head;
 		$title = self::$title;
 		
