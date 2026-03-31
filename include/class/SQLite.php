@@ -102,12 +102,6 @@ HEREDOC;
 			
 			return(false);
 		}
-		
-		if(defined('VERBOSE') && VERBOSE) {
-			if(defined('DEBUG') && DEBUG) var_dump(['$database_file_path' => $database_file_path]);
-			file_put_contents('php://stderr', "\nSQLite3 database - opened\n");
-		}
-		
 		register_shutdown_function('Database::close');
 		
 		return(true);
@@ -124,10 +118,6 @@ HEREDOC;
 				return(false);
 			}
 			self::$SQLite3 = NULL;
-			
-			if(defined('VERBOSE') && VERBOSE) {
-				file_put_contents('php://stderr', "\nSQLite3 database - closed\n");
-			}
 		}
 		
 	}//}}}//
