@@ -30,6 +30,8 @@ require('class/FileSystem.php');
 require('class/SQLite.php');
 require('function/encode.php');
 require('function/decode.php');
+require('function/export.php');
+require('function/import.php');
 
 if(true) {
 	require('data/class.php');
