@@ -1,7 +1,14 @@
 <?php
 
-function launch(string $command, int $timeout = 30) // array
-{//{{{//
+function launch(string $command, int $timeout = 30, array $ENVIRONMENT = []) // array
+{
+	/*
+		$result = [
+			"status" => '',
+			"stdout" => '',
+			"stderr" => '',
+		];
+	*/
 	
 	$timeout *= 1000000;
 	
@@ -17,7 +24,15 @@ function launch(string $command, int $timeout = 30) // array
 		return(false);
 	}
 	
-	$proc = proc_open($command, $std, $PIPE, $cwd);
+	$return = getenv('USER', true);
+	if(is_string($return)) $ENVIRONMENT["USER"] = $return;
+	
+	$return = getenv('HOME', true);
+	if(is_string($return)) $ENVIRONMENT["HOME"] = $return;
+	
+	$ENVIRONMENT["PWD"] = $cwd;
+	
+	$proc = proc_open($command, $std, $PIPE, $cwd, $ENVIRONMENT);
 	if(!is_resource($proc)) {
 		if (defined('DEBUG') && DEBUG) var_dump(['$command' => $command]);
 		trigger_error("Can't open process for command", E_USER_WARNING);
@@ -85,7 +100,6 @@ function launch(string $command, int $timeout = 30) // array
 	
 	proc_close($proc);
 	
-	return($result);
-	
-}//}}}//
+	return($result);	
+}
 
