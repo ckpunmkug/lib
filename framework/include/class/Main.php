@@ -5,6 +5,10 @@ class Main
 	function __construct()
 	{//{{{//
 		
+		if(isset($_GET["debug"])) {
+			define('DEBUG', true);
+		}
+		
 		Main::define_URL_PATH();
 		
 		Main::define_CSRF_TOKEN();
@@ -122,7 +126,12 @@ class Main
 			$URL_PATH .= 'index.php';
 		}
 		
-		define('URL_PATH', $URL_PATH);
+		if(defined('DEBUG') && DEBUG) {
+			define('URL_PATH', "{$URL_PATH}?debug&");
+		}
+		else {
+			define('URL_PATH', "{$URL_PATH}?");
+		}
 		
 		return(NULL);
 
