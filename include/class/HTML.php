@@ -24,6 +24,8 @@ body {
 HEREDOC);
 });
 
+ini_set('html_errors', '0');
+
 class HTML
 {
 	static $head = "";

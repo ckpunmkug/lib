@@ -1,13 +1,13 @@
 <?php
-class Method
+
+class Project
 {
-	static function is_setup()
+	static function is_setup(array $PATH_keys)
 	{//{{{//
 	
-		$KEY = ["config", "database", "notes"];
 		$counter = 0;
 		
-		foreach($KEY as $key) {
+		foreach($PATH_keys as $key) {
 			$return = FileSystem::is_file_rwx(PATH[$key], true, true, false, false);
 			if($return) {
 				$counter += 1;
@@ -17,7 +17,7 @@ class Method
 			}
 		}
 		
-		$return = count($KEY);
+		$return = count($PATH_keys);
 		if($counter != $return) {
 			return(false);
 		}
@@ -25,43 +25,7 @@ class Method
 		return(true);
 		
 	}//}}}//
-
-/// setup //////////////////////////////////////////////////////////////////////
 	
-	static function setup()
-	{//{{{//
-		
-		$return = self::setup_config();
-		if(!$return) {
-			trigger_error("Can't setup 'config'", E_USER_WARNING);
-			return(false);
-		}
-		if(defined('VERBOSE') && VERBOSE) {
-			trigger_error("'config' setup complete", E_USER_NOTICE);	
-		}
-		
-		$return = self::setup_database();
-		if(!$return) {
-			trigger_error("Can't setup 'database'", E_USER_WARNING);
-			return(false);
-		}
-		if(defined('VERBOSE') && VERBOSE) {
-			trigger_error("'database' setup complete", E_USER_NOTICE);	
-		}
-		
-		$return = self::setup_file(PATH['notes'], '');
-		if(!$return) {
-			trigger_error("Can't setup notes", E_USER_WARNING);
-			return(false);
-		}
-		if(defined('VERBOSE') && VERBOSE) {
-			trigger_error("'notes' setup complete", E_USER_NOTICE);	
-		}
-		
-		return(true);
-		
-	}//}}}//
-
 	static function setup_dir(string $dir_path)
 	{//{{{//
 		
@@ -159,43 +123,6 @@ class Method
 				trigger_error("Can't create table in database", E_USER_WARNING);
 				return(false);
 			}
-		}
-		
-		return(true);
-		
-	}//}}}//
-
-
-/// purge //////////////////////////////////////////////////////////////////////
-
-	static function purge()
-	{//{{{//
-		
-		$return = self::purge_file(PATH["config"], 2);
-		if(!$return) {
-			trigger_error("Can't purge 'config'", E_USER_WARNING);
-			return(false);
-		}
-		if(defined('VERBOSE') && VERBOSE) {
-			trigger_error("'config' purge complete", E_USER_NOTICE);	
-		}
-		
-		$return = self::purge_file(PATH["database"], 2);
-		if(!$return) {
-			trigger_error("Can't purge 'database'", E_USER_WARNING);
-			return(false);
-		}
-		if(defined('VERBOSE') && VERBOSE) {
-			trigger_error("'database' purge complete", E_USER_NOTICE);	
-		}
-		
-		$return = self::purge_file(PATH["notes"], 1);
-		if(!$return) {
-			trigger_error("Can't purge 'notes'", E_USER_WARNING);
-			return(false);
-		}
-		if(defined('VERBOSE') && VERBOSE) {
-			trigger_error("'notes' purge complete", E_USER_NOTICE);	
 		}
 		
 		return(true);

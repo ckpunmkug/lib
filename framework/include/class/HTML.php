@@ -73,6 +73,13 @@ HEREDOC;
 		
 	}//}}}
 
+	static function token_update()
+	{//{{{//
+		
+		if(!defined('CSRF_TOKEN')
+		
+	}//}}}//
+
 	static function echo()
 	{//{{{
 	
@@ -90,6 +97,8 @@ HEREDOC;
 		
 		$scripts = self::scripts();
 		$script = self::$script;
+		
+		$token_update = self::token_update();
 		
 		$body = self::$body;
 		
@@ -110,6 +119,7 @@ HEREDOC;
 {$scripts}
 		<script>
 {$script}
+{$token_update}
 		</script>
 	</head>
 	<body>
