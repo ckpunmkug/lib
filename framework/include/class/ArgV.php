@@ -45,7 +45,7 @@
 			define("SECOND", $string);
 		}, true
 	]);
-	ArgV::apply();
+	ArgV::apply($argv);
 }}} */
 
 class ArgV
@@ -89,12 +89,11 @@ class ArgV
 		
 	}//}}}
 	
-	static function apply()
+	static function apply(array $argv)
 	{//{{{
 	
 		self::add();
 		
-		global $argv;
 		array_walk(
 			self::$config, 
 			function(array $config, int $index, array $argv) {
@@ -158,6 +157,13 @@ class ArgV
 			'-d', '--debug', null, "Run in debug mode", 
 			function() {
 				define('DEBUG', true);
+			}, false
+		]);
+		
+		self::add([
+			'-t', '--test', null, "Include 'project/test.php' file", 
+			function() {
+				define('TEST', true);
 			}, false
 		]);
 		

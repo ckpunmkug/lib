@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-ini_set('error_reporting', E_ALL);
+error_reporting(E_ALL);
 
 $return = realpath(__DIR__.'/..');
 if(!is_string($return)) {
@@ -14,14 +14,20 @@ set_include_path(DIR.'/include');
 require('block/initialization.php');
 
 require('class/ArgV.php');
-require('function/cd.php');
+//require('function/cd.php');
 
-require('project/Method.php');
+//require('project/Method.php');
 require('project/main.php');
 
-$return = main();
+if(defined('TEST')) {
+	$return = include('project/test.php');
+	$result = intval($return);
+	exit($result);
+}
+
+$return = main($argv);
 if($return !== true) {
-	trigger_error("'main' call failed", E_USER_ERROR);
+	trigger_error("Main call failed", E_USER_ERROR);
 	exit(255);
 }
 exit(0);

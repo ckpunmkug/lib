@@ -180,8 +180,9 @@ HEREDOC;
 		$SQLite3Result = $return;
 		
 		$result = true;
+		$sql = trim($sql);
 		
-		$pattern = '/^\s*select\s+.+$/i';
+		$pattern = '/^(select)\s+.+$/i';
 		$return = preg_match($pattern, $sql);
 		if($return === 1) {
 			$result = [];
@@ -192,7 +193,7 @@ HEREDOC;
 			}
 		}
 		
-		$pattern = '/^\s*insert\s+.+$/i';
+		$pattern = '/^(insert)\s+.+$/i';
 		$return = preg_match($pattern, $sql);
 		if($return === 1) {
 			$result = self::$SQLite3->lastInsertRowID();
