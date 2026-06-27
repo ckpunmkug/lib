@@ -2,23 +2,18 @@
 
 class Main
 {
-	function __construct()
-	{//{{{//
-		
-		if(isset($_GET["debug"])) {
-			define('DEBUG', true);
-		}
-		
-		Main::define_URL_PATH();
-		
-		Main::define_CSRF_TOKEN();
-		
-		Main::switch_request_method();
-		
-	}//}}}//
 
 	static function switch_request_method()
 	{//{{{
+		
+		if(PHP_SAPI == 'cli') {
+			$return = self::console_handle();
+			if($return !== true) {
+				throw new Exception("Console handle failed");
+				exit(255);
+			}
+			exit(0);
+		}
 		
 		$request_method = @strval($_SERVER["REQUEST_METHOD"]);
 		switch($request_method) {
@@ -26,7 +21,7 @@ class Main
 				$return = self::handle_get_request();
 				if($return !== true) {
 					http_response_code(500);
-					trigger_error("Handle get request failed", E_USER_ERROR);
+					throw new Exception("Handle get request failed");
 					exit(255);
 				}
 				exit(0);
@@ -34,17 +29,187 @@ class Main
 				$return = self::handle_post_request();
 				if($return !== true) {
 					http_response_code(500);
-					trigger_error("Handle post request failed", E_USER_ERROR);
+					throw new Exception("Handle post request failed");
 					exit(255);
 				}
 				exit(0);
 			default:
 				http_response_code(500);
-				trigger_error("Unsupported http request method", E_USER_ERROR);
+				throw new Exception("Unsupported http request method");
 				exit(255);
 		}
 		
 	}//}}}
+	
+	static function console_handle()
+	{//{{{//
+		
+		if(!eval(Check::$array.='$GLOBALS["argv"]')) return(false);
+		$argv = $GLOBALS["argv"];
+		
+		array_shift($argv);
+		if(count($argv) == 0) {
+			trigger_error("Flag(s) or action not set", E_USER_WARNING);
+			return(false);
+		}
+		
+		self::command_startup_flags($argv);
+		if(defined('TEST')) {
+			require('project/test.php');
+			return(true);
+		}
+		
+		if(count($argv) == 0) {
+			trigger_error("Action not set", E_USER_WARNING);
+			return(false);
+		}
+		$METHOD = get_class_methods('Console');
+		$method = array_shift($argv);
+		if(!in_array($method, $METHOD)) {
+			if(defined('DEBUG') && DEBUG) var_dump(['action' => $method]);
+			trigger_error("Unsupported given action", E_USER_WARNING);
+			return(false);
+		}
+		
+		$parameters = [];
+		$ReflectionMethod = new ReflectionMethod('Console', $method);
+		$PARAMETER = $ReflectionMethod->getParameters();
+		foreach($PARAMETER as $parameter) {
+
+			$name = $parameter->getName();
+			$type = $parameter->getType();
+			$type = $type->getName();
+			$optional = $parameter->isOptional();
+			
+			if(count($argv) == 0 && $optional != true) {
+				trigger_error("Argument '{$name}' not set", E_USER_WARNING);
+				return(false);
+			}
+			if(count($argv) == 0 && $optional == true) break;
+			
+			$v = array_shift($argv);
+			
+			switch($type) {
+				case('string'):
+				$v = strval($v);
+				break;
+				
+				case('int'):
+				$v = intval($v);
+				break;
+				
+				case('float'):
+				$v = floatval($v);
+				break;
+				
+				default:
+				if(defined('DEBUG') && DEBUG) var_dump(['method' => $method]);
+				trigger_error("Unsupported parameter type in 'Console' method", E_USER_WARNING);
+				return(false);
+			}
+			array_push($parameters, $v);
+			
+		}// foreach($PARAMETER as $parameter)
+
+		$return = call_user_func_array("Console::{$method}", $parameters);
+		if($return !== true) {
+			trigger_error("Console method '{$method}' failed", E_USER_WARNING);
+			return(false);
+		}
+		
+		return(true);
+		
+	}//}}}//
+	
+	static function command_startup_flags(array &$argv)
+	{//{{{//
+		
+		if($argv[0] == '-h' || $argv[0] == '--help') {
+			
+			$actions = '';
+			$METHOD = get_class_methods('Console');
+			foreach($METHOD as $method) {
+			
+				if(strlen($actions) != 0) {
+					$actions .= "\n";
+				}
+				$actions .= sprintf("  %s  ", $method);
+				$parameters = '';
+				
+				$ReflectionMethod = new ReflectionMethod('Console', $method);
+				$PARAMETER = $ReflectionMethod->getParameters();
+				foreach($PARAMETER as $parameter) {
+
+					$name = $parameter->getName();
+					$type = $parameter->getType();
+					$type = $type->getName();
+					$optional = $parameter->isOptional();
+					
+					if(strlen($parameters) != 0) {
+						$parameters .= ' ';
+					}
+					
+					if($optional) {
+						$parameters .= "[{$name}]";
+					}
+					else {
+						$parameters .= "{$name}";
+					}
+					
+				}// foreach($METHOD as $method)
+				
+				$actions .= "{$parameters}";
+			
+			}// foreach($METHOD as $method)
+			
+			$help = 
+///////////////////////////////////////////////////////////////{{{//
+<<<HEREDOC
+\nSupported actions:
+{$actions}
+
+Flags:
+  -d  debug
+  -v  verbose
+  -t  test
+
+Examples:
+  ./start -dvt
+  ./start -dv action1 arg1 arg2
+  ./start action0
+\n
+HEREDOC;
+///////////////////////////////////////////////////////////////}}}//
+			
+			echo($help);
+			
+			exit(0);
+		}
+		
+		$pattern = '/^\-([dvt]+)$/';
+		$return = preg_match($pattern, $argv[0]);
+		if($return == 1) {
+			$string = array_shift($argv);
+			
+			$return = strpos($string, 'd');
+			if(is_int($return)) {
+				define('DEBUG', true);
+			}
+			
+			$return = strpos($string, 'v');
+			if(is_int($return)) {
+				define('VERBOSE', true);
+			}
+			
+			$return = strpos($string, 't');
+			if(is_int($return)) {
+				define('TEST', true);
+			}
+		}
+		
+		return(true);
+		
+	}//}}}//
 	
 	static function handle_get_request()
 	{//{{{
@@ -105,65 +270,6 @@ class Main
 		return(true);
 		
 	}//}}}
-
-	static function define_URL_PATH()
-	{//{{{//
-		
-		if(@is_string($_SERVER["REQUEST_URI"]) != true) {
-			trigger_error('Incorrect string $_SERVER["REQUEST_URI"]', E_USER_ERROR);
-			exit(255);
-		}
-		
-		$return = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
-		if(!is_string($return)) {
-			trigger_error('Parse url from $_SERVER["REQUEST_URI"] failed', E_USER_ERROR);
-			exit(255);
-		}
-		$URL_PATH = $return;
-		
-		$return = basename($URL_PATH);
-		if($return != 'index.php') {
-			$URL_PATH .= 'index.php';
-		}
-		
-		if(defined('DEBUG') && DEBUG) {
-			define('URL_PATH', "{$URL_PATH}?debug&");
-		}
-		else {
-			define('URL_PATH', "{$URL_PATH}?");
-		}
-		
-		return(NULL);
-
-	}//}}}//
-
-	static function define_CSRF_TOKEN()
-	{//{{{//
-		
-		$lifetime = 86400;
-		
-		session_set_cookie_params([
-			'lifetime' => $lifetime,
-			'path' => "/",
-			'domain' => null,
-			'secure' => false,
-			'httponly' => true,
-			'samesite' => 'Strict'
-		]);
-		session_start(['gc_maxlifetime' => $lifetime]);
-		
-		if(!(
-			isset($_SESSION["csrf_token"]) 
-			&& is_string($_SESSION["csrf_token"])
-		)) {
-			$string = session_id() . uniqid('', true);
-			$_SESSION["csrf_token"] = hash('sha256', $string);
-		}
-		define('CSRF_TOKEN', $_SESSION["csrf_token"]);
-		
-		return(NULL);
-		
-	}//}}}//
 
 	static function http_response_code_403()
 	{//{{{//

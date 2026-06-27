@@ -1,32 +1,8 @@
 <?php
 
-class Project
+class Setup
 {
-	static function is_setup(array $PATH_keys)
-	{//{{{//
-	
-		$counter = 0;
-		
-		foreach($PATH_keys as $key) {
-			$return = FileSystem::is_file_rwx(PATH[$key], true, true, false, false);
-			if($return) {
-				$counter += 1;
-			}
-			else {
-				trigger_error("File '{$key}' is not setup", E_USER_NOTICE);
-			}
-		}
-		
-		$return = count($PATH_keys);
-		if($counter != $return) {
-			return(false);
-		}
-		
-		return(true);
-		
-	}//}}}//
-	
-	static function setup_dir(string $dir_path)
+	static function install_dir(string $dir_path)
 	{//{{{//
 		
 		$return = file_exists($dir_path);
@@ -50,13 +26,13 @@ class Project
 		
 	}//}}}//
 
-	static function setup_file(string $file_path, string $file_contents)
+	static function install_file(string $file_path, string $file_contents)
 	{//{{{//
 		
 		$return = dirname($file_path);
-		$return = self::setup_dir($return);
+		$return = self::install_dir($return);
 		if(!$return) {
-			trigger_error("Can't setup dir", E_USER_WARNING);
+			trigger_error("Can't install dir", E_USER_WARNING);
 			return(false);
 		}
 		
@@ -80,7 +56,7 @@ class Project
 		
 	}//}}}//
 
-	static function setup_config()
+	static function install_config()
 	{//{{{//
 		
 		$path = DIR.'/include/project/default.php';
@@ -92,9 +68,9 @@ class Project
 		}
 		$config_contents = $return;
 		
-		$return = self::setup_file(PATH["config"], $config_contents);
+		$return = self::install_file(PATH["config"], $config_contents);
 		if(!$return) {
-			trigger_error("Can't setup file", E_USER_WARNING);
+			trigger_error("Can't install file", E_USER_WARNING);
 			return(false);
 		}
 		
@@ -102,12 +78,12 @@ class Project
 		
 	}//}}}//
 	
-	static function setup_database()
+	static function install_database()
 	{//{{{//
 		
-		$return = self::setup_file(PATH["database"], '');
+		$return = self::install_file(PATH["database"], '');
 		if(!$return) {
-			trigger_error("Can't setup file", E_USER_WARNING);
+			trigger_error("Can't install file", E_USER_WARNING);
 			return(false);
 		}
 		

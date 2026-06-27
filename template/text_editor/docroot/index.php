@@ -1,7 +1,4 @@
-#!/usr/bin/php
 <?php
-
-error_reporting(E_ALL);
 
 $return = realpath(__DIR__.'/..');
 if(!is_string($return)) {
@@ -13,13 +10,12 @@ define('DIR', $return);
 set_include_path(DIR.'/include');
 require('block/initialization.php');
 
-require('function/cd.php');
+require('class/HTML.php');
+require('function/form.php');
 
-require('project/Method.php');
-require('project/Console.php');
+require('project/Page.php');
+require('project/Action.php');
 
 require('class/Main.php');
 Main::switch_request_method();
-
-exit(255);
 
