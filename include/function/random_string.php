@@ -1,7 +1,7 @@
 <?php
 function random_string(int $random_string_length = 32)
 {//{{{
-	$random_string_length = 32;
+	
 	$chars = '0123456789abcdefjhijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$last_char_position = strlen($chars)-1;
 	$random_string = '';
@@ -12,5 +12,6 @@ function random_string(int $random_string_length = 32)
 	}
 	
 	return $random_string;
+
 }//}}}
 
