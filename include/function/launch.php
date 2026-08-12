@@ -1,7 +1,12 @@
 <?php
 
-function launch(string $command, int $timeout = 30, array $ENVIRONMENT = []) // array
-{
+function launch(
+	string $command,
+	string $stdin = '',
+	array $ENVIRONMENT = [],
+	int $timeout = 30,
+) { // array
+
 	/*
 		$result = [
 			"status" => '',
@@ -39,10 +44,92 @@ function launch(string $command, int $timeout = 30, array $ENVIRONMENT = []) // 
 		return(false);
 	}
 	
+	$strlen = strlen($stdin);
+	$return = fwrite($PIPE[0], $stdin);
+	if(!is_int($return)) {
+		trigger_error("Can't write data to stdin", E_USER_WARNING);
+		return(false);
+	}
+	if($return != $strlen) {
+		trigger_error("Can't write full data to stdin", E_USER_WARNING);
+		return(false);
+	}	
+	fclose($PIPE[0]);
+	
 	$stdout = '';
 	$stderr = '';
 	stream_set_blocking($PIPE[1], false);
 	stream_set_blocking($PIPE[2], false);
+	
+	$kill_proc_group = function(int $parent_pid)
+	{//{{{//
+		
+		$PID = [];
+		array_push($PID, $parent_pid);
+		
+		$NAME = scandir('/proc');
+		if(!is_array($NAME)) {
+			trigger_error("Can't scan /proc dir", E_USER_WARNING);
+			return(false);
+		}
+		
+		for($index = 0; $index < count($PID); $index += 1) {
+		
+			$curent_pid = $PID[$index];
+		
+			foreach($NAME as $name) {
+			
+				$return = preg_match('/^\d+$/', $name);
+				if($return != 1) continue;
+				
+				$path = "/proc/{$name}/stat";
+				if(!(
+					is_file($path)
+					&& is_readable($path)
+				)) continue;
+				
+				$stat = file_get_contents($path);
+				if(!is_string($stat)) {
+					trigger_error("Can't get contents of 'stat' file", E_USER_WARNING);
+					return(false);
+				}
+				
+				$pattern = '/^\d+\s+\(.+\)\s+([^\)]+)$/';
+				$return = preg_match($pattern, $stat, $MATCH);
+				if($return != 1) {
+					trigger_error("Can't parse command from process stat", E_USER_WARNING);
+					return(false);
+				}
+				$string = $MATCH[1];
+				
+				$pattern = '/^\S+\s+(\d+)\s+.+$/';
+				$return = preg_match($pattern, $string, $MATCH);
+				if($return != 1) {
+					trigger_error("Can't parse parent pid from process stat", E_USER_WARNING);
+					return(false);
+				}
+				$parent_pid = intval($MATCH[1]);
+				
+				if($parent_pid != $curent_pid) continue;
+				
+				$parent_pid = intval($name);
+				
+				array_push($PID, $parent_pid);
+				
+			} // foreach($NAME as $name)
+			
+		} // for($index = 0; $index < count($PID); $index += 1)
+		
+		while(true) {
+			$pid = array_pop($PID);
+			if(!is_int($pid)) break;
+			
+			posix_kill($pid, 9);
+		}
+		
+		return(true);
+		
+	};//}}}//
 	
 	while(true) {//
 		$proc_status = proc_get_status($proc);
@@ -61,9 +148,14 @@ function launch(string $command, int $timeout = 30, array $ENVIRONMENT = []) // 
 		$timeout -= 100000;
 		
 		if($timeout <= 0) {
-			proc_terminate($proc, 9);
+			$return = $kill_proc_group($proc_status["pid"]);
+			if(!$return) {
+				proc_terminate($proc, 9);
+				trigger_error("Can't send SIGKILL to proc group", E_USER_WARNING);
+			}
 			
 			foreach($PIPE as $pipe) {
+				if(!is_resource($pipe)) continue;
 				fclose($pipe);
 			}
 			proc_close($proc);
@@ -77,8 +169,6 @@ function launch(string $command, int $timeout = 30, array $ENVIRONMENT = []) // 
 	$result = [
 		"status" => $proc_status["exitcode"],
 	];
-	
-	fclose($PIPE[0]);
 	
 	$contents = stream_get_contents($PIPE[1]);
 	if(!is_string($contents)) {
